@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="PT-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integração Bi dos Bairros - Target</title>
+
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .select-container {
+            background: linear-gradient(90deg, #173DB7, #31A8D7);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #FFF;
+        }
+
+        .btn-download {
+            padding: 10px;
+            margin-left: 20px;
+            border: none;
+            background-color: #173DB7;
+            color: #FFF;
+            font-weight: 400;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            box-shadow: 2px 2px 4px rgb(83, 83, 83);
+            transition: 0.5s;
+        } 
+
+        .btn-download:hover {
+            transform: scale(1.05);
+        }
+
+        .title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 0;
+            background: linear-gradient(90deg, #31A8D7, #173DB7);
+            margin-bottom: 10px;
+        }
+
+        .title > p {
+            color: #FFF;
+            font-weight: 400;
+            font-size: 1.5rem;
+        }
+
+        .bairros {
+            font-weight: 500;
+            border-color: transparent transparent transparent darkgray;
+            height: 2.6rem;
+            border-radius: 10px;
+            padding-left: 10px;
+            box-shadow: 2px 2px 4px rgb(83, 83, 83);
+        }
+
+        .bairros:focus {
+            outline: none;
+        }
+
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            font-size: 0.9rem;
+            font-weight: 300;
+            text-align: center;
+            background: #2986CD;
+            color: #FFF;
+            font-weight: 400;
+        }
+
+        td {
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #9c9d9e;
+            color: #FFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="select-container">
+        <div style="display: flex; align-items: center;">
+            <img src="https://farol.recife.pe.gov.br/wp-content/uploads/2024/05/logopcr-branco.png" style="height: 60px; width: auto;" alt="Logo PCR">
+            <h2 style="margin-left: 10px;">INTEGRAÇÃO TARGET - BI DOS BAIRROS </h2>
+        </div>
+        <div>
+            <select name="bairros" id="" class="bairros"></select>
+            <button class="btn-download">Baixar Base Consolidada</button>
+        </div>
+    </div>
+    <div class="title">
+        <p>TODOS OS BAIRROS</p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Área Temática</th>
+                <th>Categoria Da Ação</th>
+                <th>Ação</th>
+                <th>Órgão</th>
+                <th>Bairro</th>
+                <th>RPA</th>
+                <th>Tipo Obra</th>
+                <th>Tipo Equipamento</th>
+                <th>Equipamento</th>
+                <th>Endereço</th>
+                <th>Status</th>
+                <th>Início Previsto</th>
+                <th>Início Realizado</th>
+                <th>Término Previsto</th>
+                <th>Término Realizado</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Base</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</body>
+
+<script>
+    const bairros = [
+    "Todos os Bairros", "Aflitos", "Afogados", "Agua Fria", "Alto Do Mandu", "Alto Jose Bonifacio", "Alto Jose Do Pinho", "Alto Santa Terezinha", "Apipucos",
+    "Areias", "Arruda", "Barro", "Beberibe", "Boa Viagem", "Boa Vista", "Bomba Do Hemeterio", "Bongi", "Brasilia Teimosa", "Brejo Da Guabiraba", "Brejo De Beberibe",
+    "Cabanga", "Cacote", "Cajueiro", "Campina Do Barreto", "Campo Grande", "Casa Amarela", "Casa Forte", "Caxanga", "Cidade Universitaria", "Coelhos",
+    "Cohab", "Coqueiral", "Cordeiro", "Corrego Do Jenipapo", "Curado", "Derby", "Dois Irmaos", "Dois Unidos", "Encruzilhada", "Engenho Do Meio", "Espinheiro",
+    "Estancia", "Fundao", "Gracas", "Guabiraba", "Hipodromo", "Ibura", "Ilha Do Leite", "Ilha Do Retiro", "Ilha Joana Bezerra", "Imbiribeira", "Ipsep",
+    "Iputinga", "Jaqueira", "Jardim Sao Paulo", "Jiquia", "Jordao", "Linha Do Tiro", "Macaxeira", "Madalena", "Mangabeira", "Mangueira", "Monteiro",
+    "Morro Da Conceicao", "Mustardinha", "Nova Descoberta", "Paissandu", "Parnamirim", "Passarinho", "Pau Ferro", "Peixinhos", "Pina", "Poco", "Ponto De Parada",
+    "Porto Da Madeira", "Prado", "Recife", "Rosarinho", "San Martin", "Sancho", "Santana", "Santo Amaro", "Santo Antonio", "Sao Jose", "Sitio Dos Pintos",
+    "Soledade", "Tamarineira", "Tejipio", "Torre", "Torreao", "Torroes", "Toto", "Varzea", "Vasco Da Gama", "Zumbi"
+    ]
+    
+    const GET_URL = "https://datalakepcr.recife.pe.gov.br/webhook/integracao"
+
+    const select = document.querySelector('.bairros')
+    bairros.forEach( bairro => {
+        const options = document.createElement('option')
+        const optionsText = document.createTextNode(bairro.toUpperCase())
+        options.appendChild(optionsText)
+        select.appendChild(options)
+    })
+
+    document.addEventListener( 'DOMContentLoaded',  event => {
+        fetch(GET_URL)
+        .then(res => res.json())
+        .then(bairro => {
+            console.log('carregando...')
+            bairro.forEach(info => {
+                const tr = document.createElement('tr')
+                for(const key in value) {
+                    const td = document.createElement('td')
+                    td.appendChild(document.createTextNode(velue[key]))
+                    tr.appendChild(td)
+                }
+            })
+        })
+    })    
+
+    select.addEventListener('change', () => {   
+        const title = document.querySelector('.title > p')
+        title.innerHTML = select.value
+    })
+
+</script>
+</html>

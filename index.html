@@ -25,20 +25,20 @@
         }
 
         .btn-download {
-            padding: 10px;
+            padding: 9px;
             margin-left: 20px;
             border: none;
-            background-color: #173DB7;
+            background: linear-gradient(90deg, #1b9c2c, #29c731);
             color: #FFF;
             font-weight: 400;
-            font-size: 1.2rem;
-            border-radius: 10px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid rgb(83, 83, 83);
             box-shadow: 2px 2px 4px rgb(83, 83, 83);
             transition: 0.5s;
         } 
 
         .btn-download:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         .title {
@@ -56,12 +56,16 @@
             font-size: 1.5rem;
         }
 
+        .img-title-container > img, h2 {
+            margin-bottom: 10px;
+        }
+
         .bairros {
             font-weight: 500;
             border-color: transparent transparent transparent darkgray;
-            height: 2.6rem;
-            border-radius: 10px;
+            height: 2.7rem;
             padding-left: 10px;
+            border-bottom: 2px solid rgb(83, 83, 83);
             box-shadow: 2px 2px 4px rgb(83, 83, 83);
         }
 
@@ -101,54 +105,83 @@
             background-color: #9c9d9e;
             color: #FFF;
         }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            color: #173DB7;
+        }
+
+        @media screen and (max-width: 1000px ){
+            .select-btn-container {
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+                transition: .5s;
+            }
+            .btn-download {
+                margin-left: 0;
+                margin-top: 10px;
+                transition: .5s;
+            }
+        }
+        
+        @media screen and (max-width: 1000px ){
+            .select-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 20px 0;
+            }
+
+            .select-btn-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .img-title-container {
+                display: flex;
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="select-container">
-        <div style="display: flex; align-items: center;">
+        <div class="img-title-container" style="display: flex; align-items: center;">
             <img src="https://farol.recife.pe.gov.br/wp-content/uploads/2024/05/logopcr-branco.png" style="height: 60px; width: auto;" alt="Logo PCR">
             <h2 style="margin-left: 10px;">INTEGRAÇÃO TARGET - BI DOS BAIRROS </h2>
         </div>
-        <div>
-            <select name="bairros" id="" class="bairros"></select>
-            <button class="btn-download">Baixar Base Consolidada</button>
+        <div class="select-btn-container">
+            <select name="bairros" id="" class="bairros">
+                <option value="TODOS OS BAIRROS" selected>TODOS OS BAIRROS</option>
+            </select>
+            <button class="btn-download">
+                Baixar Base 
+                <img src="./download.png" style="width: 20px; height: auto; margin-left: 5px;" alt="">
+            </button>
         </div>
     </div>
     <div class="title">
         <p>TODOS OS BAIRROS</p>
     </div>
     <table>
-        <thead>
-            <tr>
-                <th>Área Temática</th>
-                <th>Categoria Da Ação</th>
-                <th>Ação</th>
-                <th>Órgão</th>
-                <th>Bairro</th>
-                <th>RPA</th>
-                <th>Tipo Obra</th>
-                <th>Tipo Equipamento</th>
-                <th>Equipamento</th>
-                <th>Endereço</th>
-                <th>Status</th>
-                <th>Início Previsto</th>
-                <th>Início Realizado</th>
-                <th>Término Previsto</th>
-                <th>Término Realizado</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Base</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-        </tbody>
+        <thead class="header-list"></thead>
+        <tbody class="body-list-items"></tbody>
     </table>
+    <div class="loading">
+        <h3>Baixando dados...</h3>
+        <img src="./loading.gif" alt="">
+    </div>
 </body>
 
 <script>
     const bairros = [
-    "Todos os Bairros", "Aflitos", "Afogados", "Agua Fria", "Alto Do Mandu", "Alto Jose Bonifacio", "Alto Jose Do Pinho", "Alto Santa Terezinha", "Apipucos",
+    "Aflitos", "Afogados", "Agua Fria", "Alto Do Mandu", "Alto Jose Bonifacio", "Alto Jose Do Pinho", "Alto Santa Terezinha", "Apipucos",
     "Areias", "Arruda", "Barro", "Beberibe", "Boa Viagem", "Boa Vista", "Bomba Do Hemeterio", "Bongi", "Brasilia Teimosa", "Brejo Da Guabiraba", "Brejo De Beberibe",
     "Cabanga", "Cacote", "Cajueiro", "Campina Do Barreto", "Campo Grande", "Casa Amarela", "Casa Forte", "Caxanga", "Cidade Universitaria", "Coelhos",
     "Cohab", "Coqueiral", "Cordeiro", "Corrego Do Jenipapo", "Curado", "Derby", "Dois Irmaos", "Dois Unidos", "Encruzilhada", "Engenho Do Meio", "Espinheiro",
@@ -159,9 +192,11 @@
     "Soledade", "Tamarineira", "Tejipio", "Torre", "Torreao", "Torroes", "Toto", "Varzea", "Vasco Da Gama", "Zumbi"
     ]
     
-    const GET_URL = "https://datalakepcr.recife.pe.gov.br/webhook/integracao"
+    const GET_URL = "http://172.21.3.188:9047/api/v3/job/197a6a46-db56-0c1b-8856-ef93a7dbb700/results"
+    const POST_URL = "https://webhook-n8n-dev-conectarecife.recife.pe.gov.br/webhook/integracao"
 
     const select = document.querySelector('.bairros')
+
     bairros.forEach( bairro => {
         const options = document.createElement('option')
         const optionsText = document.createTextNode(bairro.toUpperCase())
@@ -169,26 +204,95 @@
         select.appendChild(options)
     })
 
-    document.addEventListener( 'DOMContentLoaded',  event => {
-        fetch(GET_URL)
-        .then(res => res.json())
-        .then(bairro => {
-            console.log('carregando...')
-            bairro.forEach(info => {
-                const tr = document.createElement('tr')
-                for(const key in value) {
-                    const td = document.createElement('td')
-                    td.appendChild(document.createTextNode(velue[key]))
-                    tr.appendChild(td)
-                }
-            })
-        })
-    })    
+    const thead = document.querySelector('.header-list')
+    const tbody = document.querySelector('.body-list-items')
 
-    select.addEventListener('change', () => {   
+    const loading = document.querySelector('.loading')
+
+    function buildTableHeader(bairros) {
+        const trh = document.createElement('tr')
+        for(const key in bairro) {
+            const th = document.createElement('th')
+            th.appendChild(document.createTextNode(key))
+            trh.appendChild(th)
+        }
+        thead.appendChild(trh)
+    }
+
+    function buildTableItems(bairros) {
+        const tr = document.createElement('tr')
+        for(const key in bairro) {
+            const td = document.createElement('td')
+            td.appendChild(document.createTextNode(bairro[key]))
+            tr.appendChild(td)
+        }
+        tbody.appendChild(tr)
+    }
+
+    function GETDados(URL, selectedBairro){
+        fetch(GET_URL, {
+            method: 'GET', // Método da requisição
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer tqi1f3eii09ibdt0lklp81v3jh`,
+            }
+        })
+        .then(res => res.json())
+        .then(res => res.rows)
+        .then(bairros => {
+            if(selectedBairro == "TODOS OS BAIRROS"){
+                buildTableHeader(bairros[0])
+                bairros.forEach( bairro => {
+                    buildTableItems(bairro)  
+                })
+            } else {
+                const filteredItens = bairros.filter( item => item.BAIRRO == selectedBairro)
+                buildTableHeader(filteredItens[0])
+                filteredItens.forEach(fBairro => {
+                    buildTableItems(fBairro)
+                })
+            }
+        })
+        .catch (err => {
+            console.log(`GET: Erro ao carregar os dados da API: ${err}`)
+        })
+        .finally( () => {
+            loading.style.display = 'none'
+        })
+    }
+
+    function POSTDados(URL, bairro) {
+        const config = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            },
+            body: JSON.stringify({ bairro: bairro })
+        };
+        
+        console.log("Solicitando dados para bairro ", bairro)
+        
+        fetch(URL, config)
+        .then(res => res.json())
+        .then(bairros => alert("Download realizado!"))
+    }
+
+    document.addEventListener('DOMContentLoaded', async (event) => {
+        await GETDados(GET_URL)
+    })
+    
+    select.addEventListener('change', async () => {   
         const title = document.querySelector('.title > p')
         title.innerHTML = select.value
+
+        await GETDados(GET_URL, select.value)
     })
 
+    const btnDownload = document.querySelector('.btn-download')
+    btnDownload.addEventListener('click', async (event) => {
+        await POSTDados(POST_URL, select.value)
+    })
+    
+    
 </script>
 </html>

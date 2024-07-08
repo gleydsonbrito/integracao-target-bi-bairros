@@ -80,7 +80,7 @@
         }
 
         th, td {
-            padding: 8px;
+            padding: 8px 5px;
             border: 1px solid #ddd;
         }
 
@@ -95,6 +95,7 @@
 
         td {
             text-align: left;
+            font-size: 0.8rem;
         }
 
         tr:nth-child(even) {
@@ -192,10 +193,12 @@
     "Soledade", "Tamarineira", "Tejipio", "Torre", "Torreao", "Torroes", "Toto", "Varzea", "Vasco Da Gama", "Zumbi"
     ]
     
-    const GET_URL = "http://172.21.3.188:9047/api/v3/job/197a6a46-db56-0c1b-8856-ef93a7dbb700/results"
+    //const GET_URL = "https://dremio-datalakepcr.recife.pe.gov.br/api/v3/job/1973e0a3-864c-ea6a-a66d-59a2e81b2500/results"
+    const GET_URL = "https://n8n-datalakepcr.recife.pe.gov.br/webhook/target-obras"
     const POST_URL = "https://webhook-n8n-dev-conectarecife.recife.pe.gov.br/webhook/integracao"
 
     const select = document.querySelector('.bairros')
+    const loading = document.querySelector('.loading')
 
     bairros.forEach( bairro => {
         const options = document.createElement('option')
@@ -204,12 +207,53 @@
         select.appendChild(options)
     })
 
+    function formatDate(date) {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        const dayString = day < 10 ? '0' + day : day;
+        const monthString = month < 10 ? '0' + month : month;
+
+        return `${dayString}/${monthString}/${year}`;
+    }
+
+    async function saveOnLocalStorage(dados) {
+        try {
+            await localStorage.setItem("dados",  JSON.stringify(dados))
+            await localStorage.setItem("data",  JSON.stringify(formatDate(new Date())))               
+        } catch(err) {
+            console.log("Erro para salvar os dados no Local Storage", err)
+        }
+    }
+
+    window.onload = function getDados() {
+        fetch(GET_URL)
+        .then(res => res.json())
+        .then(async dados => {
+            const lsDate = localStorage.getItem('data')
+            if(lsDate == null){
+                await saveOnLocalStorage(dados)
+            } else {
+                if(formatDate(new Date()) != lsDate.data) {
+                    await saveOnLocalStorage(dados)
+                }
+            }
+        })
+        .catch(err => {
+            console.log("Erro ao carregar dados da api", err)
+        })
+        .finally( () => { 
+            loading.style.display = 'none'
+            buildTable()
+        })
+    } 
+
+    const table = document.querySelector('table')
     const thead = document.querySelector('.header-list')
     const tbody = document.querySelector('.body-list-items')
 
-    const loading = document.querySelector('.loading')
-
-    function buildTableHeader(bairros) {
+    function buildTableHeader(bairro) {
         const trh = document.createElement('tr')
         for(const key in bairro) {
             const th = document.createElement('th')
@@ -219,7 +263,7 @@
         thead.appendChild(trh)
     }
 
-    function buildTableItems(bairros) {
+    function buildTableItems(bairro) {
         const tr = document.createElement('tr')
         for(const key in bairro) {
             const td = document.createElement('td')
@@ -229,37 +273,34 @@
         tbody.appendChild(tr)
     }
 
-    function GETDados(URL, selectedBairro){
-        fetch(GET_URL, {
-            method: 'GET', // Método da requisição
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer tqi1f3eii09ibdt0lklp81v3jh`,
-            }
-        })
-        .then(res => res.json())
-        .then(res => res.rows)
-        .then(bairros => {
-            if(selectedBairro == "TODOS OS BAIRROS"){
-                buildTableHeader(bairros[0])
-                bairros.forEach( bairro => {
-                    buildTableItems(bairro)  
+    async function buildTable( brr="TODOS OS BAIRROS" ){
+        const dados = await JSON.parse(localStorage.getItem('dados'))
+        if(dados){
+            if(brr == "TODOS OS BAIRROS") {
+                buildTableHeader(dados[0])
+                dados.forEach( d => {
+                    buildTableItems(d)
                 })
             } else {
-                const filteredItens = bairros.filter( item => item.BAIRRO == selectedBairro)
-                buildTableHeader(filteredItens[0])
-                filteredItens.forEach(fBairro => {
-                    buildTableItems(fBairro)
-                })
+                const fb = dados.filter( fbr => fbr.BAIRRO == brr)
+                if(fb.length > 0) {
+                    buildTableHeader(fb[0])
+                    fb.forEach( d => {
+                        buildTableItems(d)
+                    })
+                } else {
+                    alert("Não foram encontradas ocorrências com o bairro selecionado")
+                    //buildTable()
+                }
+                
             }
-        })
-        .catch (err => {
-            console.log(`GET: Erro ao carregar os dados da API: ${err}`)
-        })
-        .finally( () => {
-            loading.style.display = 'none'
-        })
+            
+        }
     }
+
+    document.addEventListener("DOMContentLoaded", async  event => {
+        const dados = JSON.parse(localStorage.getItem('dados'))
+    })
 
     function POSTDados(URL, bairro) {
         const config = {
@@ -276,16 +317,14 @@
         .then(res => res.json())
         .then(bairros => alert("Download realizado!"))
     }
-
-    document.addEventListener('DOMContentLoaded', async (event) => {
-        await GETDados(GET_URL)
-    })
     
     select.addEventListener('change', async () => {   
         const title = document.querySelector('.title > p')
         title.innerHTML = select.value
+        thead.innerHTML = ''
+        tbody.innerHTML = ''
 
-        await GETDados(GET_URL, select.value)
+        buildTable(select.value)
     })
 
     const btnDownload = document.querySelector('.btn-download')

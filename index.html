@@ -43,6 +43,7 @@
 
         .title {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 1rem 0;
@@ -54,6 +55,9 @@
             color: #FFF;
             font-weight: 400;
             font-size: 1.5rem;
+        }
+        .title .contagem {
+            font-size: 0.8rem;
         }
 
         .img-title-container > img, h2 {
@@ -100,7 +104,7 @@
 
         td {
             text-align: left;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         tr:nth-child(even) {
@@ -174,6 +178,7 @@
     </div>
     <div class="title">
         <p>TODOS OS BAIRROS</p>
+        <p class="contagem"></p>
     </div>
     <div class="table-container">
         <table>
@@ -279,16 +284,28 @@
         tbody.appendChild(tr)
     }
 
+    function countTotalRegister(dados){
+        const pContagem = document.querySelector('.contagem')
+        pContagem.innerHTML = ''
+        if(dados){
+            pContagem.appendChild(document.createTextNode(`Total de obras encontradas: ${dados.length}`))
+        } else {
+            pContagem.appendChild(document.createTextNode(`Total de obras encontradas: ${0}`))
+        }
+    }
+
     async function buildTable(brr = "TODOS OS BAIRROS") {
         const dados = await JSON.parse(localStorage.getItem('dados'))
         if (dados) {
             if (brr == "TODOS OS BAIRROS") {
+                countTotalRegister(dados)
                 buildTableHeader(dados[0])
                 dados.forEach(d => {
                     buildTableItems(d)
                 })
             } else {
                 const fb = dados.filter(fbr => fbr.BAIRRO == brr)
+                countTotalRegister(fb)
                 if (fb.length > 0) {
                     buildTableHeader(fb[0])
                     fb.forEach(d => {

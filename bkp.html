@@ -332,9 +332,20 @@
         buildTable(select.value)
     })
 
+    function getDatalakeData(){
+        fetch('https://dremio-datalakepcr.recife.pe.gov.br/api/v3/job/1973e0a3-864c-ea6a-a66d-59a2e81b2500/results', {
+            headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer rb0em4iaggl6l28n45lkl6kqdu` // Adicionando o token ao cabeçalho
+            }   
+        })
+        .then(res => res.json())
+        .then(res => console.log(res.rows[0]))
+    }
+
     const btnDownload = document.querySelector('.btn-download')
     btnDownload.addEventListener('click', async (event) => {
-        await POSTDados(POST_URL, select.value)
+        await getDatalakeData()
     })
     
     

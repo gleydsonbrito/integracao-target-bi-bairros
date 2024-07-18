@@ -187,7 +187,7 @@
         </table>
     </div>
     <div class="loading">
-        <h3>Baixando dados...</h3>
+        <h3>Carregando dados...</h3>
         <img src="./loading.gif" alt="">
     </div>
 </body>
@@ -237,7 +237,7 @@
             console.log("Erro para salvar os dados no Local Storage", err)
         }
     }
-
+/*
     window.onload = function getDados() {
         fetch(GET_URL)
             .then(res => res.json())
@@ -259,6 +259,8 @@
                 buildTable()
             })
     }
+*/
+    window.onload = buildTable()
 
     const table = document.querySelector('table')
     const thead = document.querySelector('.header-list')
@@ -295,8 +297,11 @@
     }
 
     async function buildTable(brr = "TODOS OS BAIRROS") {
-        const dados = await JSON.parse(localStorage.getItem('dados'))
-        if (dados) {
+        //const dados = await JSON.parse(localStorage.getItem('dados'))
+        fetch(GET_URL)
+        .then(res => res.json())
+        .then(dados => {
+            if (dados) {
             if (brr == "TODOS OS BAIRROS") {
                 countTotalRegister(dados)
                 buildTableHeader(dados[0])
@@ -316,6 +321,14 @@
                 }
             }
         }
+        })
+        .catch(err => {
+                console.log("Erro ao carregar dados da api", err)
+            })
+            .finally(() => {
+                loading.style.display = 'none'
+            })
+        
     }
 
     select.addEventListener('change', async () => {
@@ -323,6 +336,8 @@
         title.innerHTML = select.value
         thead.innerHTML = ''
         tbody.innerHTML = ''
+
+        loading.style.display = 'flex'
 
         buildTable(select.value)
     })

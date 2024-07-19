@@ -172,7 +172,7 @@
             </select>
             <button class="btn-download">
                 Baixar Base 
-                <img src="./download.png" style="width: 20px; height: auto; margin-left: 5px;" alt="">
+                <img class="btn-icon" src="./download.png" style="width: 20px; height: auto; margin-left: 5px;" alt="">
             </button>
         </div>
     </div>
@@ -206,7 +206,7 @@
     ]
 
     const GET_URL = "https://n8n-datalakepcr.recife.pe.gov.br/webhook/target-obras"
-    const POST_URL = "https://webhook-n8n-dev-conectarecife.recife.pe.gov.br/webhook/integracao"
+    const POST_URL = "https://n8n-datalakepcr.recife.pe.gov.br/webhook/database-download"
 
     const select = document.querySelector('.bairros')
     const loading = document.querySelector('.loading')
@@ -324,10 +324,10 @@
         })
         .catch(err => {
                 console.log("Erro ao carregar dados da api", err)
-            })
-            .finally(() => {
-                loading.style.display = 'none'
-            })
+        })
+        .finally(() => {
+            loading.style.display = 'none'
+        })
         
     }
 
@@ -347,7 +347,8 @@
         await POSTDados(POST_URL, select.value)
     })
 
-    function POSTDados(URL, bairro) {
+    function POSTDados(URL, bairro="TODOS OS BAIRROS") {
+        const iconButton = document.querySelector(".btn-icon")
         const config = {
             method: 'POST',
             headers: {
@@ -355,12 +356,32 @@
             },
             body: JSON.stringify({ bairro: bairro })
         };
-
-        console.log("Solicitando dados para bairro ", bairro)
-
+        iconButton.src = './btnloadgif.gif'
         fetch(URL, config)
-            .then(res => res.json())
-            .then(bairros => alert("Download realizado!"))
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Erro na resposta da rede');
+            }
+            return res.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `${bairro}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            alert(`Dados do bairro ${bairro.toLowerCase()} baixados com sucesso!`);
+        })
+        .catch(err => {
+            console.log("Erro ao baixar a base de dados", err);
+            alert("Erro ao baixar a base de dados: " + err.message);
+        })
+        .finally(() => {
+            iconButton.src = './download.png';
+        });
     }
 </script>
 </html>

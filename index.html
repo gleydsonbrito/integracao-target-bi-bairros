@@ -199,10 +199,12 @@
             <tbody class="body-list-items"></tbody>
         </table>
     </div>
-    <div class="loading">
-        <h3>Carregando dados...</h3>
-        <img src="./loading.gif" alt="">
-    </div>
+    <!--
+        <div class="loading">
+            <h3>Carregando dados...</h3>
+            <img src="./loading.gif" alt="">
+        </div>
+    -->
 </body>
 
 <script>
@@ -347,12 +349,12 @@
     select.addEventListener('change', async () => {
         const title = document.querySelector('.title > p')
         title.innerHTML = select.value
-        thead.innerHTML = ''
-        tbody.innerHTML = ''
+        //thead.innerHTML = ''
+        //tbody.innerHTML = ''
 
-        loading.style.display = 'flex'
+        //loading.style.display = 'flex'
 
-        buildTable(select.value)
+        //buildTable(select.value)
     })
 
     const btnDownload = document.querySelector('.btn-download')

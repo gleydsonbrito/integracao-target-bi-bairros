@@ -1,397 +1,334 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sticky Table Header</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Indicadores Econômicos</title>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+        .table__scroll__container {
+            overflow-x: auto;
         }
 
-        .select-container {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            z-index: 1000;
+        .table-accordion-panel {
+            display: none;
         }
 
-        .title {
-            margin-top: 80px; /* Ajuste conforme necessário para espaço entre o contêiner fixo e o título */
-            padding: 10px;
-            background-color: #f4f4f4;
+        .table-accordion.expanded + .table-accordion-panel {
+            display: table-row;
         }
 
-        .table-container {
-            margin-top: 20px; /* Ajuste conforme necessário para espaço entre o título e a tabela */
-            height: 60vh; /* Define uma altura fixa para o contêiner da tabela */
-            overflow-y: auto; /* Permite a rolagem vertical */
+        .filters {
+            margin-bottom: 20px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .filters label {
+            margin-right: 10px;
         }
-
-        thead.header-list {
-            background-color: #444;
-            color: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 10; /* Garante que o cabeçalho fique acima das linhas da tabela */
-        }
-
-        thead th {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-
-        tbody td {
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-
-        .loading {
-            text-align: center;
-            margin-top: 20px;
-        }
-
     </style>
 </head>
-<body>
-    <div class="select-container">
-        <div class="img-title-container" style="display: flex; align-items: center;">
-            <img src="https://farol.recife.pe.gov.br/wp-content/uploads/2024/05/logopcr-branco.png" style="height: 60px; width: auto;" alt="Logo PCR">
-            <h2 style="margin-left: 10px;">INTEGRAÇÃO TARGET - BI DOS BAIRROS </h2>
-        </div>
-        <div class="select-btn-container">
-            <select name="bairros" id="" class="bairros">
-                <option value="TODOS OS BAIRROS" selected>TODOS OS BAIRROS</option>
-            </select>
-            <button class="btn-download">
-                Baixar Base 
-                <img class="btn-icon" src="./download.png" style="width: 20px; height: auto; margin-left: 5px;" alt="">
-            </button>
-        </div>
-    </div>
-    <div class="title">
-        <p>TODOS OS BAIRROS</p>
-        <p class="contagem"></p>
-    </div>
 
-    <div class="table-container">
-        <table>
-            <thead class="header-list">
-                <tr>
-                    <th>Header 1</th>
-                    <th>Header 2</th>
-                    <th>Header 3</th>
-                </tr>
-            </thead>
-            <tbody class="body-list-items">
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 1, Cell 1</td>
-                    <td>Row 1, Cell 2</td>
-                    <td>Row 1, Cell 3</td>
-                </tr>
-                <tr>
-                    <td>Row 2, Cell 1</td>
-                    <td>Row 2, Cell 2</td>
-                    <td>Row 2, Cell 3</td>
-                </tr>
-                <!-- More rows here -->
-            </tbody>
-        </table>
-    </div>
-    <div class="loading">
-        <h3>Carregando dados...</h3>
-        <img src="./loading.gif" alt="">
-    </div>
+<body style="overflow: auto;">
+    <main class="conteudo pure-g">
+        <section class="pure-u-1">
+            <div class="envolve_conteudo">
+                <div class="largura-maxima">
+                    <div class="indicadores-table-container">
+                        <div class="table__scroll__container" id="tables-container">
+                            <!-- Tabelas serão inseridas aqui dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const apiUrlIndicadores = 'https://farol.recife.pe.gov.br/wp-json/farolsl/v1/indicadores';
+
+            fetch(apiUrlIndicadores)
+                .then(response => response.json())
+                .then(data => {
+                    const tablesContainer = document.getElementById('tables-container');
+                    const areaTematicaFilter = document.getElementById('area-tematica-filter');
+                    const orgaoFilter = document.getElementById('orgao-filter');
+                    
+                    const groupedIndicators = groupBy(data, 'palavra_chave');
+                    const uniqueAreasTematicas = new Set();
+                    const uniqueOrgaos = new Set();
+
+                    let firstGroupSkipped = false;
+
+                    for (const [palavraChave, indicators] of Object.entries(groupedIndicators)) {
+                        if (!firstGroupSkipped) {
+                            firstGroupSkipped = true;
+                            continue; // Pula o primeiro grupo de indicadores
+                        }
+
+                        const table = document.createElement('table');
+                        table.setAttribute('data-group', 'indicadores-economicos');
+                        table.classList.add('indicadores-tabela', 'indicadores-economicos');
+
+                        const thead = document.createElement('thead');
+                        thead.innerHTML = `
+                            <tr>
+                                <th class="indicador-title">${palavraChave}</th>
+                                <th>Último</th>
+                                <th>Anterior</th>
+                                <th>12 meses</th>
+                                <th>No ano</th>
+                            </tr>
+                        `;
+                        table.appendChild(thead);
+
+                        const tbody = document.createElement('tbody');
+                        table.appendChild(tbody);
+
+                        indicators.forEach(indicator => {
+                            uniqueAreasTematicas.add(indicator.areas_tematicas);
+                            uniqueOrgaos.add(indicator.orgaos);
+                            
+                            const linkDados = indicator.link_dados;
+                            fetch(linkDados)
+                                .then(response => response.json())
+                                .then(data => {
+                                    let latestData = null;
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0); // Ajusta para o início do dia
+
+                                    if (data.length > 0) {
+                                        data.forEach(item => {
+                                            const rowDataDate = new Date(item.data);
+                                            if (rowDataDate <= today && (latestData === null || rowDataDate > new Date(latestData.data))) {
+                                                latestData = item;
+                                            }
+                                        });
+
+                                        if (latestData) {
+                                            // Calcular data do mês anterior
+                                            const dataAnterior = new Date(latestData.data);
+                                            dataAnterior.setMonth(dataAnterior.getMonth() - 1);
+                                            const dataAnteriorFormatted = `${dataAnterior.getFullYear()}-${String(dataAnterior.getMonth() + 1).padStart(2, '0')}-01`;
+
+                                            // Calcular a soma dos últimos 12 meses
+                                            let somaUltimos12Meses = 0;
+                                            const dataInicio12Meses = new Date(today);
+                                            dataInicio12Meses.setFullYear(dataInicio12Meses.getFullYear() - 1);
+
+                                            data.forEach(item => {
+                                                const rowDataDate = new Date(item.data);
+                                                if (rowDataDate <= today && rowDataDate >= dataInicio12Meses) {
+                                                    somaUltimos12Meses += item.quantidade;
+                                                }
+                                            });
+
+                                            // Calcular o total do ano atual
+                                            let totalAnoAtual = 0;
+                                            data.forEach(item => {
+                                                const rowDataDate = new Date(item.data);
+                                                if (rowDataDate.getFullYear() === today.getFullYear()) {
+                                                    totalAnoAtual += item.quantidade;
+                                                }
+                                            });
+
+                                            function formatNumberWithDots(number) {
+                                                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                            }
+
+                                            const tr = document.createElement('tr');
+                                            tr.setAttribute('id', `indicador-${indicator.title.toLowerCase().replace(/ /g, '-')}`);
+                                            tr.classList.add('table-accordion', indicator.title.toLowerCase().replace(/ /g, '-'));
+
+                                            tr.innerHTML = `
+                                                <th>
+                                                    <span class="icon-tag sprite"></span>
+                                                    <span class="nonsprite">
+                                                        ${indicator.title} <small>${indicator.unidade_medida_sec}</small>
+                                                    </span>
+                                                </th>
+                                                <td class="ultimo">
+                                                    <span class="print-label">Último</span>
+                                                    ${formatNumberWithDots(latestData.quantidade.toFixed(0))} <small>${formatDate(latestData.data)}</small>
+                                                </td>
+                                                <td class="desktop-tablet-only anterior">
+                                                    <span class="print-label">Anterior</span>
+                                                    ${formatNumberWithDots(getQuantidadePorData(data, dataAnteriorFormatted).toFixed(0))} <small>${formatDate(dataAnteriorFormatted)}</small>
+                                                </td>
+                                                <td class="desktop-tablet-only dozemeses">
+                                                    <span class="print-label">12 meses</span>
+                                                    ${formatNumberWithDots(somaUltimos12Meses.toFixed(0))}
+                                                </td>
+                                                <td class="desktop-tablet-only ano">
+                                                    <span class="print-label">No ano</span>
+                                                    ${formatNumberWithDots(totalAnoAtual.toFixed(0))}
+                                                </td>
+                                            `;
+
+                                            tr.addEventListener('click', function () {
+                                                this.classList.toggle('expanded');
+                                                const panel = this.nextElementSibling;
+                                                panel.classList.toggle('show');
+                                            });
+
+                                            tbody.appendChild(tr);
+
+                                            const trDetails = document.createElement('tr');
+                                            trDetails.classList.add('table-accordion-panel', indicator.title.toLowerCase().replace(/ /g, '-') + '-details');
+
+                                            trDetails.innerHTML = `
+                                            <td colspan="5">
+                                                <div class="panel" style="display: block;">
+                                                    <div class="indicadores-dados-container">
+                                                        <div class="indicador-metadado" data-unidade="%">
+                                                            <p class="metadado-topico">Periodicidade:</p>
+                                                            <p class="data-periodicidade"
+                                                                data-periodicidade-grafico="Mensal">${indicator.periodicidade}</p>
+                                                            <div class="data-divulgacao">
+                                                                <p class="metadado-topico">Próxima Divulgação:</p>
+                                                                <p>10/07/2024</p>
+                                                            </div>
+                                                            <p class="metadado-topico">Fonte:</p>
+                                                            <p>${indicator.orgaos}</p>
+                                                        </div>
+                                                        <div class="indicador-grafico">
+                                                            <div class="container-grafico" id="chart-container-${indicator.title.toLowerCase().replace(/ /g, '-')}" style="width: 100%; height: 300px;">
+                                                                <!--Gráfico aqui-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            `;
+
+                                            tbody.appendChild(trDetails);
+
+                                            // Renderizar o gráfico ao carregar os dados
+                                            renderChart(indicator.title, data);
+                                        }
+                                    }
+                                });
+                        });
+
+                        table.appendChild(tbody);
+                        tablesContainer.appendChild(table);
+                    }
+
+                    // Adicionar checkboxes para os filtros
+                    createCheckboxFilters(areaTematicaFilter, Array.from(uniqueAreasTematicas), 'areas_tematicas');
+                    createCheckboxFilters(orgaoFilter, Array.from(uniqueOrgaos), 'orgaos');
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar indicadores:', error);
+                });
+
+            function groupBy(array, key) {
+                return array.reduce((result, currentValue) => {
+                    const groupKey = currentValue[key];
+                    if (!result[groupKey]) {
+                        result[groupKey] = [];
+                    }
+                    result[groupKey].push(currentValue);
+                    return result;
+                }, {});
+            }
+
+            function renderChart(title, data) {
+                const chartContainerId = `chart-container-${title.toLowerCase().replace(/ /g, '-')}`;
+                const chartContainer = document.getElementById(chartContainerId);
+                const chartData = data
+                    .map(item => ({
+                        x: formatDateMonthYear(item.data),
+                        y: item.quantidade
+                    }))
+                    .slice(-12); // Filtrar apenas os últimos 12 meses
+
+                const config = {
+                    type: 'line',
+                    series: [{
+                        values: chartData.map(item => item.y)
+                    }],
+                    scaleX: {
+                        labels: chartData.map(item => item.x)
+                    }
+                };
+
+                zingchart.render({
+                    id: chartContainerId,
+                    data: config,
+                    height: '100%',
+                    width: '100%'
+                });
+            }
+
+            function formatDate(dateString) {
+                const options = { month: 'short', year: 'numeric' };
+                const [year, month, day] = dateString.split('-');
+                const date = new Date(year, month - 1, day); // month - 1 porque os meses em JavaScript são baseados em zero (janeiro = 0, fevereiro = 1, etc.)
+                const formattedDate = date.toLocaleDateString('pt-BR', options);
+
+                // Remover o "de" se estiver presente
+                return formattedDate.replace(/ de/, '');
+            }
+
+            function formatDateMonthYear(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('pt-BR', { year: 'numeric', month: 'short' });
+            }
+
+            function getQuantidadePorData(data, targetDate) {
+                const targetItem = data.find(item => item.data === targetDate);
+                return targetItem ? targetItem.quantidade : 0;
+            }
+            
+            function createCheckboxFilters(container, values, filterType) {
+                container.innerHTML = ''; // Limpar o container
+                values.forEach(value => {
+                    const label = document.createElement('label');
+                    label.textContent = value;
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = value;
+                    checkbox.name = filterType;
+
+                    checkbox.addEventListener('change', filterTable);
+
+                    label.prepend(checkbox);
+                    container.appendChild(label);
+                });
+            }
+
+           function filterTable() {
+                const searchInput = document.getElementById('search-input').value.toLowerCase();
+                const areaFilters = Array.from(document.querySelectorAll('#area-tematica-filter input:checked')).map(cb => cb.value);
+                const orgaoFilters = Array.from(document.querySelectorAll('#orgao-filter input:checked')).map(cb => cb.value);
+
+                const tables = document.querySelectorAll('.indicadores-tabela');
+                tables.forEach(table => {
+                    const rows = table.querySelectorAll('tbody tr');
+                    rows.forEach(row => {
+                        const titleElem = row.querySelector('th span.nonsprite');
+                        const title = titleElem ? titleElem.textContent.toLowerCase() : '';
+                        const areaTematicaElem = row.querySelector('td.indicador-title');
+                        const areaTematica = areaTematicaElem ? areaTematicaElem.textContent : '';
+                        const orgaoElem = row.querySelector('p.metadado-topico');
+                        const orgao = orgaoElem ? orgaoElem.textContent : '';
+
+                        const matchesSearch = title.includes(searchInput);
+                        const matchesArea = areaFilters.length === 0 || areaFilters.includes(areaTematica);
+                        const matchesOrgao = orgaoFilters.length === 0 || orgaoFilters.includes(orgao);
+
+                        row.style.display = (matchesSearch && matchesArea && matchesOrgao) ? '' : 'none';
+                    });
+                });
+            }
+            
+
+            document.getElementById('search-input').addEventListener('input', filterTable);
+        });
+    </script>
 </body>
+
 </html>
